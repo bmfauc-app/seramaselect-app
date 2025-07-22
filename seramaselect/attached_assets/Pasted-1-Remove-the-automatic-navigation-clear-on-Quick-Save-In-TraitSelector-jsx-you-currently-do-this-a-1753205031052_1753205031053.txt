@@ -1,0 +1,65 @@
+1. Remove the automatic navigation/clear on Quick Save
+In TraitSelector.jsx, you currently do this after basic‐mode save:
+
+js
+Copy
+Edit
+setShowSavedMessage(true);
+setTimeout(() => {
+  setShowSavedMessage(false);
+  navigate('/records');
+}, 1500);
+(around lines L84–L92) TraitSelector
+
+Instead, drop the navigate('/records') so you just show the “✓ Bird Saved!” overlay and then return to the form:
+
+diff
+Copy
+Edit
+   await saveRecord();
+   console.log('✅ Record saved successfully');
+
+   setShowSavedMessage(true);
+   setTimeout(() => {
+     setShowSavedMessage(false);
+-    navigate('/records');
+   }, 1500);
+This lets the user stay on the same entry screen after each Quick Save.
+
+2. Pass an explicit payload so it always saves exactly what’s on the form
+Because you’ve refactored saveRecord to accept a data payload (per our prior step), build that payload right in handleAnalyze and hand it off—so you never rely on stale context state:
+
+js
+Copy
+Edit
+// inside handleAnalyze(), replacing the basic‐mode branch:
+if (mode === 'basic') {
+  const basicPayload = {
+    id:          traitData.id,                  // existing record → update; null → new
+    name:        formData.name,
+    sex:         formData.sex,
+    weight:      parseFloat(formData.weight) || 0,
+    dateOfBirth: formData.dateOfBirth,
+    status:      formData.status,
+    traits:      {},                            // omit details in Quick Log
+    ct:          results.ct || '',
+    pt:          results.pt || '',
+    cv:          results.cv || '',
+    warnings:    results.warnings || [],
+    projectId:   formData.projectId
+  };
+
+  try {
+    console.log('🔄 Quick-saving basic record…');
+    await saveRecord(basicPayload);
+    console.log('✅ Quick-save complete');
+    setShowSavedMessage(true);
+    setTimeout(() => setShowSavedMessage(false), 1500);
+  } catch (err) {
+    console.error('Quick-save failed:', err);
+    alert('Failed to save record. Please try again.');
+  }
+  return;
+}
+Because you’re handing in the exact basicPayload, React’s asynchronous state updates never matter.
+

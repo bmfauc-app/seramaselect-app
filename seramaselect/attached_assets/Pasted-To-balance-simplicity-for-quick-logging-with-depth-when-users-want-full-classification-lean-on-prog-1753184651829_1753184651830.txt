@@ -1,0 +1,119 @@
+To balance simplicity for quick logging with depth when users want full classification, lean on progressive disclosure and a tiered workflow:
+
+1. Two Modes (Basic vs. Detailed)
+Basic Mode
+
+Fields shown: Bird name/ID, Sex, Recorded weight, and (optionally) Conformation Type (CT).
+
+Save: Captures only those core fields.
+
+When to use: Day-to-day logging, flock census, quick notes.
+
+Detailed Mode
+
+Fields shown: Everything in Basic, plus Extended Traits (ET), Plumage Type (PT), Color Variety (CV), and auto-calculated warnings/score.
+
+Access:
+
+A toggle/button (“Add full classification”) on the Basic form
+
+Or a second tab/step in a wizard (“Advanced details”)
+
+2. Form Structure & UX Patterns
+Step-by-Step Wizard
+
+Step 1: Core Info (always required)
+
+Step 2: Classification (optional—only if user clicks “Advanced”)
+
+Step 3: Review & Save (show summary of CT, PT, CV, warnings)
+
+Collapsible Panels (Accordions)
+
+Keep ET, PT, CV sections collapsed by default under a header like “Advanced classification.”
+
+When expanded, they load their inputs (lazy-loaded code) so you don’t slow down the initial form render.
+
+Inline Defaults & Smart Presets
+
+CT: default to the bird’s last known CT or the most common one for that sex.
+
+PT/CV: default to “Smooth” and “Other” (or whatever your most frequent values are).
+
+Weight: prefill with the bird’s last recorded weight (if editing) or leave blank for new entries.
+
+Tooltips & Help Text
+
+Keep labels short (“Extended Traits”) but add a “?” icon that explains what ET are and why you’d record them.
+
+Offer sample values or an “Auto-classify” button that runs your classifyBird logic immediately to give them feedback.
+
+3. Data Model & Storage
+Separate Tables/Collections
+
+Birds (minimal): { id, name, sex, lastWeight, lastCT }
+
+Classifications: { birdId, timestamp, CT, PT, CV, ET: {...}, weight, warnings }
+
+Link Records
+
+Every time you “save” you create a new Classification doc—but the Bird entry stays lean.
+
+On the Bird profile page, show a chronological list of classifications; default view only shows CT & weight, with a “View details” expand for full ET/PT/CV.
+
+4. Performance & Code Organization
+Lazy-load your ET/PT/CV form components
+
+js
+Copy
+Edit
+const AdvancedForm = React.lazy(() => import('./AdvancedForm'));
+This way the main, basic form bundle stays small.
+
+Config-driven fields
+
+Drive your form inputs from the same JSON maps you use for classification (CT_MAP, PT_MAP, CV_MAP).
+
+That reduces duplication and keeps form and logic in sync.
+
+Form Library + Validation
+
+Use something like React Hook Form or Formik to manage conditional fields, validation, and performance on large forms.
+
+5. Keeping It Systematic
+Consistent Entry Point
+
+Always “Add new Bird” → Basic form → optional Advanced
+
+Single Save Action
+
+Don’t scatter multiple save buttons—have one “Save” at the bottom of whatever mode you’re in.
+
+Editable Later
+
+Even if someone saves only Basic, they can always “Edit details” to fill in ET/PT/CV later.
+
+Clear Labels
+
+In your UI, differentiate “Record basic info” vs. “Record full classification.”
+
+Feedback Loop
+
+After save, show a toast/alert:
+
+“Basic record saved”
+
+or “Full classification saved—CT: TA, PT: Frizzled, CV: Black”
+
+In a nutshell
+Default to minimal fields.
+
+Offer an “Advanced” path for full ET/PT/CV capture.
+
+Lazy-load and config-drive the heavy form bits.
+
+Store core bird info separately from detailed classification snapshots.
+
+Always let users upgrade a basic record to detailed with a single click.
+
+That approach keeps your app fast and simple for everyday logging, yet fully comprehensive whenever a user—or a judge—needs the nitty-gritty detail.

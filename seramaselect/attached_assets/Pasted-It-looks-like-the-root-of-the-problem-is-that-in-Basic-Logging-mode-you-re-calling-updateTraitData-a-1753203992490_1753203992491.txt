@@ -1,0 +1,94 @@
+It looks like the root of the problem is that in Basic Logging mode you’re calling updateTraitData and updateResults immediately before saveRecord(), but React state updates are asynchronous—so by the time saveRecord() reads traitData and results from context, they’re still the old (empty) values. That’s why your “quick‐save” birds end up with blank fields.
+
+1. Refactor saveRecord to accept an explicit payload
+Instead of having saveRecord() always pull from context, let it take an optional data object. If you pass in a payload, it uses that; otherwise it falls back to context state.
+
+js
+Copy
+Edit
+// in TraitContext.jsx
+// change signature:
+const saveRecord = async (payload = null, imageFile = null) => {
+  try {
+    // If a payload was provided, use its fields; else use context state
+    const data = payload ?? {
+      id: traitData.id || `record_${Date.now()}`,
+      name: traitData.name,
+      sex: traitData.sex,
+      weight: traitData.weight,
+      dateOfBirth: traitData.dateOfBirth,
+      status: traitData.status,
+      otherStatus: traitData.otherStatus,
+      otherCategory: traitData.otherCategory,
+      projectId: traitData.projectId,
+      traits: traitData.traits,
+      ct: results.ct,
+      pt: results.pt,
+      cv: results.cv,
+      warnings: results.warnings,
+    };
+
+    // … handle image upload as before …
+
+    const record = {
+      ...data,
+      imageUrl,
+      timestamp: new Date().toISOString()
+    };
+
+    await setDoc(doc(db, 'records', record.id), record);
+    setRecords(prev => {
+      const filtered = prev.filter(r => r.id !== record.id);
+      return [...filtered, record];
+    });
+
+    return record;
+  } catch (err) {
+    console.error('❌ saveRecord failed:', err);
+    alert(`Saving failed: ${err.message}`);
+    throw err;
+  }
+};
+2. In your TraitSelector’s basic path, build and pass the payload directly
+That way you don’t have to wait for React to flush state—you’re handing exactly the data you want saved.
+
+js
+Copy
+Edit
+// in TraitSelector.jsx, inside handleAnalyze():
+if (mode === 'basic') {
+  const basicData = {
+    id: traitData.id,                // or omit if always new
+    name: formData.name,
+    sex: formData.sex,
+    weight: parseFloat(formData.weight) || 0,
+    dateOfBirth: formData.dateOfBirth,
+    status: formData.status,
+    otherStatus: formData.otherStatus,
+    otherCategory: formData.otherCategory,
+    projectId: formData.projectId,
+    traits: {                        // you can even omit this if you truly want minimal
+      bodyCarriage: formData.bodyCarriage,
+      backLength:   formData.backLength,
+      // …
+    },
+    ct:    results.ct || '',        // preserve previous if needed
+    pt:    results.pt || '',
+    cv:    results.cv || '',
+    warnings: results.warnings || [],
+  };
+
+  try {
+    console.log('🔄 Quick‐saving basic record…');
+    await saveRecord(basicData);
+    console.log('✅ Saved!');
+    setShowSavedMessage(true);
+    setTimeout(() => {
+      setShowSavedMessage(false);
+      navigate('/records');
+    }, 1500);
+  } catch (error) {
+    console.error('Quick‐save failed:', error);
+    alert('Failed to save record. Please try again.');
+  }
+}

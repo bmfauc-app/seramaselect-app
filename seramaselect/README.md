@@ -1,0 +1,182 @@
+
+# Serama Select
+
+A comprehensive Serama breeding companion app that enables breeders to analyze bird traits, track records, manage breeding data, and classify birds according to established guidelines. Built with React and Firebase.
+
+---
+
+## 🚀 Features
+
+### Core Functionality
+- **Bird Trait Analysis**: Comprehensive trait selection and classification system
+- **Record Management**: Save, view, edit, and delete bird records
+- **Image Upload**: Automatic image compression and Firebase Storage integration
+- **Classification System**: Intelligent classification (CT, PT, CV) based on standard guidelines
+- **Dark/Light Mode**: Persistent theme support
+- **Responsive Design**: Mobile-first layout optimized for all devices
+
+### Recording Modes
+- **Basic Logging**: Quick entry for essential bird information
+- **Detailed Analysis**: Full trait selection with complete classification output
+
+### Trait Categories
+- **Body Carriage**: Upright, Forward, Slightly Forward
+- **Back Length**: Short, Medium, Long
+- **Tail Carriage**: High, Medium, Low, Squirrel
+- **Wing Position**: Tight, Normal, Loose
+- **Comb Type**: Single, Rose, Pea, Walnut
+- **Feather Type**: Normal, Frizzled, Silkie
+- **Color Patterns**: Standard colors and patterns
+
+### Classification Results
+- **Class Type (CT)**: Ayam, Modern, Traditional, Undetermined
+- **Plumage Type (PT)**: Normal, Frizzled, Silkie
+- **Color Variety (CV)**: Detailed color classification
+- **Warnings**: Automatic detection of non-standard traits
+
+---
+
+## 🛠️ Technology Stack
+- **Frontend**: React 18 + Vite
+- **Backend**: Firebase Firestore & Storage
+- **Routing**: React Router DOM
+- **Icons**: React Icons
+- **Styling**: CSS (mobile-first responsive design)
+- **Image Processing**: HTML5 Canvas for client-side compression
+
+---
+
+## 📁 Project Structure
+```
+src/
+├── components/          # Reusable UI components
+├── contexts/            # React Context providers (TraitContext, ThemeContext)
+├── data/                # Static data and configuration (traitOptions.js)
+├── firebase/            # Firebase initialization (firebase.js)
+├── pages/               # Main pages (Home, TraitSelector, ResultsPage, Records, ComingSoon)
+├── utils/               # Utility functions (classify.js, classificationMaps.js, imageUtils.js)
+└── App.jsx              # Root component with theme provider and routing
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js v20+
+- A Firebase project with Firestore and Storage enabled
+
+### Installation
+1. **Clone the repository**
+   ```bash
+   git clone <repo_url>
+   cd serama-select
+   ```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+3. **Configure Firebase**
+   - Create a `.env` file in the project root.
+   - Add the following variables:
+     ```env
+     VITE_FIREBASE_API_KEY=your_api_key
+     VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+     VITE_FIREBASE_PROJECT_ID=your_project_id
+     VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+     VITE_FIREBASE_APP_ID=your_app_id
+     ```
+
+### Development
+```bash
+npm run dev
+```
+
+---
+
+## 🔧 Configuration
+
+### Firebase Setup
+- **Firestore Rules**: Secure `records` collection
+- **Storage Rules**: Secure `bird-images` bucket
+- **Indexing**: Add necessary indexes for queries
+
+### Image Compression Settings
+- **Max Dimensions**: 800×600px
+- **JPEG Quality**: 80%
+- **Format**: JPEG conversion for optimal size
+
+---
+
+## 📱 Pages & Navigation
+
+- **Home Dashboard**: Summary stats, quick actions
+- **Trait Selector**: Form for basic/detailed logging
+- **Results Page**: Classification output & photo upload
+- **Records**: List, edit, delete saved records
+- **Coming Soon**: Placeholder for future features
+
+---
+
+## 🎨 Theme System
+
+- Persistent light/dark mode preferences
+- Smooth transitions
+- Mobile-optimized controls
+
+---
+
+## 🔄 State Management
+
+- **TraitContext**: Manages current trait data and classification results
+- **ThemeContext**: Handles theme preferences
+- **Local State**: Real-time form validation and UI state
+
+---
+
+## 📊 Classification System
+
+- Uses lookup tables and weighted logic
+- Calculates CT, PT, CV
+- Generates warnings for non-standard or conflicting traits
+
+---
+
+## 🚀 Deployment
+
+- Optimized for static hosting on Replit
+- **Build Commands**:
+  ```bash
+  npm run build
+  npm run preview
+  ```
+
+---
+
+## 🤝 Contributing
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/xyz`)
+3. Commit your changes (`git commit -m "Add xyz"`)
+4. Push to branch (`git push origin feature/xyz`)
+5. Open a pull request
+
+Please follow the existing code structure, naming conventions, and add tests/documentation for new features.
+
+---
+
+## 📄 License
+
+This project is licensed under the ISC License.
+
+---
+
+## 🔮 Coming Soon
+- Hatching tracker
+- Gallery sharing
+- Advanced analytics
+- Export functionality
+- Breeding predictions
+
+---
+
+**Serama Select** — Your complete breeding companion for managing and classifying Serama chickens with precision and ease.

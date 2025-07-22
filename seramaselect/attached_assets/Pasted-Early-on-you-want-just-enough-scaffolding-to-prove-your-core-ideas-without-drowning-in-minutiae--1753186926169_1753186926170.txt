@@ -1,0 +1,63 @@
+Early on, you want just enough “scaffolding” to prove your core ideas, without drowning in minutiae. Think of it as building your house:
+
+Lay a strong foundation (MVP scope & core flows)
+
+Identify your top 2–3 user journeys. For Serama Select, that might be:
+
+“I want to enter a new bird and get an instant classification.”
+
+“I want to browse saved records and edit one.”
+
+“I want to upload bird photos and see them in my record.”
+
+Sketch the simplest screens that cover those flows—just wireframes or boxes on paper.
+
+Define the minimum data model: what’s the bare-bones record you need? (e.g. bird ID, sex, CT, PT, CV, image URL).
+
+Build the “skeleton” before stuffing it with content
+
+Wire up real navigation and empty placeholders where your big data tables will go.
+
+Hook up form fields for the essential traits and save/load from Firebase (even if they’re initially unlabeled).
+
+Get classification logic running against a tiny test set instead of the full chart.
+
+Validate & iterate before enriching
+
+Show this lightweight prototype to a fellow breeder (or yourself!), and walk through:
+
+“Can I create a record?”
+
+“Do I understand where to click next?”
+
+“Does the summary make sense at a glance?”
+
+Tweak the flows, labels, and data model until those core journeys feel frictionless.
+
+Progressively disclose complexity
+
+Once your MVP is solid, start adding real trait-selection detail in phases:
+
+Phase 1: Populate the TraitSelector with the four most critical traits.
+
+Phase 2: Add the next eight traits (grouped logically).
+
+Phase 3: Bring in the full palette of color varieties and extended traits.
+
+Use accordion panels or “Advanced options” toggles so casual users aren’t overwhelmed.
+
+Keep accessibility & documentation in mind
+
+Even in your early builds, label form controls clearly and ensure keyboard navigation works.
+
+Maintain a living spec (markdown or a simple Confluence page) that records:
+
+What each screen must do
+
+Which data fields exist and why
+
+Any known gaps or “coming soon” items
+
+Rule of thumb
+“If you can’t build it in 3 days, you’re over-designing it.”
+Start by fully shipping a tiny, polished slice of functionality. Once that’s in users’ hands—real or imaginary—you’ll know exactly which details to flesh out next, and you’ll avoid investing in features people might never use.
